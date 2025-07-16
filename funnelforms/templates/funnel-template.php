@@ -68,6 +68,11 @@
                                     <?php endforeach; ?>
                                 </div>
                             </div>
+                        <?php elseif ($type === 'info-text'): ?>
+                            <div class="funnel-info-text">
+                                <?= wp_kses_post($element['label']) ?>
+                            </div>
+
 
                         <?php elseif ($type === 'video' && !empty($element['src'])): ?>
                             <div class="funnel-video">
