@@ -1,4 +1,4 @@
-console.log('✅ script.js Version 23 wurde geladen');
+console.log('✅ script.js Version 26 wurde geladen');
 
 document.addEventListener('DOMContentLoaded', () => {
     const progress = document.querySelector('.funnel-progressbar .bar');
@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentStep = 0;
     let stepHistory = [];
     let funnelPath = [];
+
+
 
     function getSteps() {
         return [...document.querySelectorAll('.funnel-step')];
@@ -54,8 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
             percent = Math.round((indexInPath / (funnelPath.length - 1)) * 100);
         }
 
+        // 🔧 Optional: Bei finalem Schritt immer 100 %
+        const currentStep = getSteps()[currentIndex];
+        if (currentStep?.dataset.final === 'true') {
+            percent = 100;
+        }
+
         progress.style.width = percent + '%';
     }
+
 
     function showStep(index) {
         const steps = getSteps();
@@ -65,6 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentStep = index;
         updateProgressbar(index);
+        if (index === 0) {
+            btnNext.style.display = 'none';
+        } else {
+            btnNext.style.display = 'inline-block';
+        }
+
         btnBack.style.display = stepHistory.length > 0 ? 'inline-block' : 'none';
         btnNext.textContent = steps[index]?.dataset.final === 'true' ? 'Absenden' : 'Weiter';
     }
@@ -113,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let next = current.dataset.next;
 
-        // Fallback für Bildauswahl
         if ((!next || isNaN(next))) {
             const selected = current.querySelector('.image-choice.selected');
             if (selected && selected.dataset.nextStep) {
@@ -121,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Letzter Fallback: Schritt + 1
         if (!next || isNaN(next)) {
             next = parseInt(current.dataset.step) + 1;
         }
@@ -137,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Bildauswahl (nur Auswahl + Sprung – kein data-next setzen!)
     document.querySelectorAll('.image-choice-group').forEach(group => {
         group.querySelectorAll('.image-choice').forEach(choice => {
             choice.addEventListener('click', () => {
@@ -201,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // Initial starten
     funnelPath = buildFullPath(0);
     showStep(currentStep);
 });
