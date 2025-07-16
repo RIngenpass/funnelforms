@@ -1,5 +1,5 @@
 <script type="text/x-template" id="funnelformbuilder-template">
-    <div class="columns is-multiline funnel-builder" style="background-color: #FFFFFF; border: dotted">
+    <div class="columns is-multiline funnel-builder" style="background-color: #FFFFFF;">
         <div v-for="(step, sIndex) in steps" :key="sIndex" class="column is-one-third">
             <div class="card is-fullheight">
                 <header class="card-header">
@@ -33,8 +33,9 @@
                                 <label class="label">Feldtyp</label>
                                 <div class="control">
                                     <div class="select is-fullwidth">
-                                        <select v-model="el.type">
-                                            <option value="text">Textfeld</option>
+                                        <select v-model="el.type" @change="onFieldTypeChange(el)">
+
+                                        <option value="text">Textfeld</option>
                                             <option value="email">E-Mail</option>
                                             <option value="select">Dropdown</option>
                                             <option value="textarea">Textarea</option>
@@ -42,15 +43,19 @@
                                             <option value="contact7">Contact7</option>
                                             <option value="date">Datum (Kalender)</option>
                                             <option value="video">Video</option>
+                                            <option value="info-text">Infotext / HTML</option>
+
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="field">
+
+                            <div class="field" v-if="el.type !== 'info-text'">
                                 <label class="label">Label</label>
                                 <input class="input" v-model="el.label" placeholder="Feldbeschriftung">
                             </div>
+
 
                             <div class="field">
                                 <label class="label">Nächster Schritt</label>
@@ -79,6 +84,12 @@
                                 <label class="label">Video-URL (z.B. YouTube Embed-Link)</label>
                                 <input class="input" v-model="el.src" placeholder="https://www.youtube.com/embed/xyz123">
                             </div>
+
+                            <div v-if="el.type === 'info-text'" class="field">
+                                <label class="label">Infotext / HTML</label>
+                                <textarea class="textarea" v-model="el.label" placeholder="Hier kommt dein Hinweis oder HTML-Text rein."></textarea>
+                            </div>
+
 
                             <div v-if="['select','image-choice'].includes(el.type)">
                                 <label class="label">Optionen</label>
@@ -117,6 +128,7 @@
                                             </button>
                                         </div>
                                     </div>
+
 
                                     <button type="button" class="button is-small is-link mt-2" @click="addOption(el)">
                                         <span class="icon is-small">➕</span><span>+ Option</span>
