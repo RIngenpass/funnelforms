@@ -16,4 +16,7 @@ require_once __DIR__ . '/includes/settings-page.php';
 require_once __DIR__ . '/includes/database.php';
 require_once __DIR__ . '/includes/form-add.php';
 require_once __DIR__ . '/includes/form-list.php';
+require_once __DIR__ . '/includes/ajax-handler.php';
+
+
 

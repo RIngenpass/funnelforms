@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: '',
                     elements: [],
                     next_step: null,
-                    is_final: false
+                    is_final: false,
+                    on_complete: false
                 });
                 this.normalizeSteps();
             },
@@ -180,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 key: 'step_' + sIndex,
                 next_step: step.next_step,
                 is_final: !!step.is_final,
+                on_complete: !!step.on_complete,
                 elements: step.elements.map((el, eIndex) => {
                     // Name generieren, wenn leer
                     if (!el.name || el.name.trim() === '') {
@@ -193,13 +195,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     return {
                         type: el.type,
-                        label: el.label || '', // kein Fallback/Auto-Label!
+                        label: el.label || '',
                         name: el.name,
                         options: el.options || [],
                         shortcode: el.shortcode || '',
                         dynamic: !!el.dynamic,
-                        src: el.src || ''
+                        src: el.src || '',
+                        required: !!el.required // ✅ Pflichtfeld speichern
                     };
+
                 })
             };
         });

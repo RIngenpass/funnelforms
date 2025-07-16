@@ -54,7 +54,7 @@ function funnelforms_add_form_page() {
         </ul>
     </div>';
 
-    echo '<div class="wrap" style="background-color: #FFFFFF; border:dotted"><h1>' . ($id ? 'Formular bearbeiten' : 'Neues Formular') . '</h1>';
+    echo '<div class="wrap" style="background-color: #FFFFFF;"><h1>' . ($id ? 'Formular bearbeiten' : 'Neues Formular') . '</h1>';
     echo '<form method="post">';
     echo '<table class="form-table">';
     echo '<tr><th><label for="name">Interner Name</label></th><td><input type="text" name="name" id="name" value="' . esc_attr($form->name ?? '') . '" required style="width: 300px;"></td></tr>';

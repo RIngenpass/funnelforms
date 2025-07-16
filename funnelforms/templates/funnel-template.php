@@ -9,9 +9,11 @@
              data-step="<?= $stepIndex ?>"
              data-next="<?= isset($step['next_step']) ? esc_attr($step['next_step']) : '' ?>"
              data-back="<?= isset($step['back_step']) ? esc_attr($step['back_step']) : '' ?>"
-            <?= !empty($step['is_final']) ? 'data-final="true"' : '' ?>>
+            <?= !empty($step['is_final']) ? 'data-final="true"' : '' ?>
+            <?= !empty($step['on_complete']) ? 'data-on-complete="true"' : '' ?>>
 
-            <h2><?= esc_html($step['title'] ?? 'Frage') ?></h2>
+
+        <h2><?= esc_html($step['title'] ?? 'Frage') ?></h2>
 
 
             <div class="funnel-elements">
@@ -107,5 +109,8 @@
     });
 
 
+</script>
+<script>
+    const ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
 </script>
 

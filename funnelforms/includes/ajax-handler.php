@@ -7,6 +7,7 @@ function funnelforms_submit()
 {
     global $wpdb;
 
+    // Eingabedaten parsen
     $raw = $_POST['answers'] ?? '';
     $data = json_decode(stripslashes($raw), true);
 
@@ -15,7 +16,7 @@ function funnelforms_submit()
         return;
     }
 
-    // Speichern in Datenbank
+    // In Datenbank speichern
     $table = $wpdb->prefix . 'funnelforms_results';
     $inserted = $wpdb->insert($table, [
         'answers' => maybe_serialize($data),
@@ -27,22 +28,30 @@ function funnelforms_submit()
         return;
     }
 
-    // Mailversand
+    // Empfängeradresse aus den Plugin-Einstellungen holen
     $to = get_option('funnelforms_email');
     if (!$to || !is_email($to)) {
         wp_send_json_error(['message' => 'Empfängeradresse ist ungültig oder fehlt']);
         return;
     }
 
+    // HTML-E-Mail erzeugen
     $subject = 'Neue FunnelForms-Einreichung';
-    $body = '';
+    $body = '<h2 style="font-family: sans-serif;">Neue FunnelForms-Einreichung</h2>';
+    $body .= '<table style="border-collapse: collapse; width: 100%; font-family: sans-serif;">';
+    $body .= '<thead><tr style="background-color: #f2f2f2;"><th style="padding: 8px; border: 1px solid #ddd;">Frage</th><th style="padding: 8px; border: 1px solid #ddd;">Antwort</th></tr></thead><tbody>';
+
     foreach ($data as $entry) {
-        $frage = sanitize_text_field($entry['question'] ?? '');
-        $antwort = sanitize_text_field($entry['answer'] ?? '');
-        $body .= "$frage:\n$antwort\n\n";
+        $frage = esc_html($entry['question'] ?? '');
+        $antwort = nl2br(esc_html($entry['answer'] ?? ''));
+        $body .= "<tr><td style=\"padding: 8px; border: 1px solid #ddd;\">{$frage}</td><td style=\"padding: 8px; border: 1px solid #ddd;\">{$antwort}</td></tr>";
     }
 
-    $mail_sent = wp_mail($to, $subject, $body);
+    $body .= '</tbody></table>';
+
+    $headers = ['Content-Type: text/html; charset=UTF-8'];
+
+    $mail_sent = wp_mail($to, $subject, $body, $headers);
 
     if (!$mail_sent) {
         wp_send_json_error(['message' => 'E-Mail-Versand fehlgeschlagen']);
@@ -50,35 +59,5 @@ function funnelforms_submit()
     }
 
     wp_send_json_success(['message' => 'Formular erfolgreich verarbeitet']);
-    wp_die(); // <- unbedingt am Ende
+    wp_die();
 }
-
-add_action('wp_ajax_funnelforms_save_json', function () {
-    if (!current_user_can('manage_options')) {
-        wp_send_json_error(['message' => 'Keine Berechtigung']);
-    }
-
-    $form_id = isset($_POST['form_id']) ? intval($_POST['form_id']) : 0;
-    $data = isset($_POST['data']) ? wp_unslash($_POST['data']) : '';
-
-    if ($form_id && $data) {
-        global $wpdb;
-        $table = $wpdb->prefix . 'exp_funnelforms_forms';
-
-        $updated = $wpdb->update(
-            $table,
-            ['data' => $data],
-            ['id' => $form_id],
-            ['%s'],
-            ['%d']
-        );
-
-        if ($updated !== false) {
-            wp_send_json_success(['message' => 'Gespeichert']);
-        } else {
-            wp_send_json_error(['message' => 'DB Fehler']);
-        }
-    }
-
-    wp_send_json_error(['message' => 'Ungültige Daten']);
-});

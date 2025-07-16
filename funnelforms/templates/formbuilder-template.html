@@ -11,10 +11,11 @@
                     <div class="buttons are-small ml-2">
                         <button class="button is-light" @click="moveStepUp(sIndex)" :disabled="sIndex === 0" title="Nach oben">⬆️</button>
                         <button class="button is-light" @click="moveStepDown(sIndex)" :disabled="sIndex === steps.length - 1" title="Nach unten">⬇️</button>
+                        <a class="card-header-icon" @click="steps.splice(sIndex, 1)" title="Schritt löschen">❌</a>
                     </div>
 
                     <!-- Schritt löschen -->
-                    <a class="card-header-icon" @click="steps.splice(sIndex, 1)" title="Schritt löschen">❌</a>
+
                 </header>
 
                 <div class="card-content">
@@ -55,6 +56,12 @@
                                 <label class="label">Label</label>
                                 <input class="input" v-model="el.label" placeholder="Feldbeschriftung">
                             </div>
+                            <div class="field" v-if="['text', 'email', 'number', 'textarea', 'select'].includes(el.type)">
+                                <label class="checkbox">
+                                    <input type="checkbox" v-model="el.required">
+                                    Pflichtfeld
+                                </label>
+                            </div>
 
 
                             <div class="field">
@@ -68,6 +75,13 @@
                                     Dies ist der letzte Schritt (für Progressbar)
                                 </label>
                             </div>
+                            <div class="field">
+                                <label class="checkbox">
+                                    <input type="checkbox" v-model="step.on_complete">
+                                    Dies ist der Abschluss-Schritt nach dem Absenden
+                                </label>
+                            </div>
+
 
                             <div class="field">
                                 <button type="button" class="button is-danger is-small is-light" @click="step.elements.splice(eIndex,1)">

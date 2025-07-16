@@ -1,4 +1,4 @@
-console.log('✅ script.js Version 26 wurde geladen');
+console.log('✅ script.js Version 27 wurde geladen');
 
 document.addEventListener('DOMContentLoaded', () => {
     const progress = document.querySelector('.funnel-progressbar .bar');
@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentStep = 0;
     let stepHistory = [];
     let funnelPath = [];
-
-
 
     function getSteps() {
         return [...document.querySelectorAll('.funnel-step')];
@@ -56,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
             percent = Math.round((indexInPath / (funnelPath.length - 1)) * 100);
         }
 
-        // 🔧 Optional: Bei finalem Schritt immer 100 %
         const currentStep = getSteps()[currentIndex];
         if (currentStep?.dataset.final === 'true') {
             percent = 100;
@@ -65,6 +62,23 @@ document.addEventListener('DOMContentLoaded', () => {
         progress.style.width = percent + '%';
     }
 
+    function validateCurrentStep() {
+        const current = document.querySelector('.funnel-step.active');
+        const requiredFields = current.querySelectorAll('[required]');
+        let valid = true;
+
+        requiredFields.forEach(field => {
+            if (field.type === 'radio') {
+                const radios = current.querySelectorAll(`input[type="radio"][name="${field.name}"]`);
+                const oneChecked = Array.from(radios).some(r => r.checked);
+                if (!oneChecked) valid = false;
+            } else if (!field.value || field.value.trim() === '') {
+                valid = false;
+            }
+        });
+
+        btnNext.disabled = !valid;
+    }
 
     function showStep(index) {
         const steps = getSteps();
@@ -82,6 +96,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         btnBack.style.display = stepHistory.length > 0 ? 'inline-block' : 'none';
         btnNext.textContent = steps[index]?.dataset.final === 'true' ? 'Absenden' : 'Weiter';
+
+        // Pflichtfelder beobachten
+        validateCurrentStep();
+        const current = getSteps()[index];
+        const inputs = current.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('input', validateCurrentStep);
+            if (input.type === 'radio') {
+                input.addEventListener('change', validateCurrentStep);
+            }
+        });
     }
 
     function goToStep(index) {
@@ -100,26 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     btnNext.addEventListener('click', () => {
-        const steps = getSteps();
         const current = document.querySelector('.funnel-step.active');
         if (!current) return;
-
-        const inputs = current.querySelectorAll('input, select, textarea');
-        let valid = true;
-
-        inputs.forEach(input => {
-            if (input.hasAttribute('required') && !input.value) {
-                input.classList.add('funnel-error');
-                valid = false;
-            } else {
-                input.classList.remove('funnel-error');
-            }
-        });
-
-        if (!valid) {
-            alert('Bitte alle Pflichtfelder ausfüllen.');
-            return;
-        }
 
         if (current.dataset.final === 'true') {
             submitFunnel();
@@ -193,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        fetch('/wp-admin/admin-ajax.php', {
+        fetch(ajaxurl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'action=funnelforms_submit&answers=' + encodeURIComponent(JSON.stringify(results))
@@ -202,10 +209,17 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 console.log('Antwort vom Server:', data);
                 if (data.success) {
-                    alert('Vielen Dank! Ihre Daten wurden gesendet.');
-                } else {
-                    alert(data.data?.message || 'Fehler beim Senden.');
+                    const steps = getSteps();
+                    const thankYouStep = steps.find(s => s.dataset.onComplete === "true");
+
+                    if (thankYouStep) {
+                        const index = steps.indexOf(thankYouStep);
+                        showStep(index);
+                    } else {
+                        alert("✅ Formular gesendet. (Kein Abschluss-Schritt definiert)");
+                    }
                 }
+
             })
             .catch(err => {
                 console.error('Fehler beim Senden:', err);
