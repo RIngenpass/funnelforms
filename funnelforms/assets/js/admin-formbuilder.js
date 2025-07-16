@@ -82,8 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                         .catch(err => console.error('❌ AJAX Fehler:', err));
                 }
-            }
-            ,
+            },
 
             confirmDeleteStep(index) {
                 if (confirm('Diesen Schritt wirklich löschen?')) {
@@ -99,13 +98,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const newField = {
-                    type: 'text',
+                    type: 'image-choice',
                     label: '',
-                    name: '',
-                    options: [],
+                    name: 'feld_' + step.title.toLowerCase().replace(/\s+/g, '_') + '_image',
+                    options: [{
+                        label: '',
+                        src: '',
+                        next: null
+                    }],
                     shortcode: '',
-                    dynamic: false,
-                    src: ''
+                    dynamic: false
                 };
 
                 step.elements.push(newField);
@@ -139,13 +141,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
             addOption(el) {
                 if (!el.options) this.$set(el, 'options', []);
-                el.options.push({ label: '', src: '', next: '' });
+                el.options.push({
+                    label: '',
+                    src: '',
+                    next: null
+                });
             }
-        },
+            ,
+
+            onFieldTypeChange(el) {
+                if (el.type === 'image-choice') {
+                    if (!el.options || el.options.length === 0) {
+                        this.$set(el, 'options', [{
+                            label: '',
+                            src: '',
+                            next: null
+                        }]);
+                    }
+                } else if (el.type !== 'select') {
+                    if (el.options) {
+                        this.$set(el, 'options', []);
+                    }
+                }
+            },
+
         mounted() {
             this.normalizeSteps();
         }
-    });
+    }});
 
     // Exportfunktion zur Speicherung in DB
     window.generateFunnelJSON = function () {
@@ -158,17 +181,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 next_step: step.next_step,
                 is_final: !!step.is_final,
                 elements: step.elements.map((el, eIndex) => {
+                    // Name generieren, wenn leer
                     if (!el.name || el.name.trim() === '') {
                         el.name = 'feld_' + step.title.toLowerCase().replace(/\s+/g, '_') + '_' + eIndex;
                     }
 
+                    // KEIN automatisches label setzen für info-text oder andere
                     if ((el.type === 'contact7' || el.type === 'select') && el.shortcode) {
                         el.shortcode = el.shortcode.replace(/\\"/g, '"').replace(/"/g, '\\"');
                     }
 
                     return {
                         type: el.type,
-                        label: el.label,
+                        label: el.label || '', // kein Fallback/Auto-Label!
                         name: el.name,
                         options: el.options || [],
                         shortcode: el.shortcode || '',
