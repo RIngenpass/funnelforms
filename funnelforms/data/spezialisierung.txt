@@ -1,0 +1,143 @@
+ASP.NET
+AWS
+Agiles Projektmanagement
+Angular
+Ansible
+Ant
+Apache Mesos
+ArgoCD
+Assembler
+Backend
+Bitbucket
+C
+C#
+C++
+CI/CD
+CSS
+Canva
+ChatGPT
+Cloud Architect
+Cloud Engineer
+Cloudformation
+Cobol
+Cobol HP NonStop
+Cobol IBM Enterprise
+Cobol IBM z/OS
+Cobol Micro Focus
+Containerisation
+Cybersecurity
+Datadog
+Datenbanken
+DesignThinking
+DevOps Engineer
+Django
+Docker
+Docker/Docker Swarm
+Frontend
+GCP
+Gemini
+Git
+GitHub
+Github Actions
+Github Copilot
+Gitlab
+Go
+Groovy
+Harbor
+Helm
+JCL
+JIRA/Confluence
+JUnit
+Java
+JavaScript
+Javadoc
+Jenkins
+KI/ML
+Kanban
+Kibana
+Kotlin
+Kubernetes
+Kustomize
+Lambda
+LangGraph
+Laravel
+Linux
+Llamaindex
+MS365
+Make
+MariaDB
+Miro
+Mobile App Development
+MsSQL
+MySQL
+Nomad
+OpenCobol
+OpenShift
+Openshift
+Oracle
+PHP
+PL/i
+Perplexity
+PostgreSQL
+Prince2
+Product Owner
+Projektmanagement
+Python
+R
+REXX
+RPG
+Rancher
+React
+React.js
+Rust
+SAFe
+SAP ABAP
+SAP BI
+SAP BW
+SAP Batch-Input
+SAP CML
+SAP CRM
+SAP Enterprise Portal
+SAP ERP
+SAP FPM
+SAP Fiori
+SAP HCM
+SAP HR
+SAP IS-U EDM
+SAP MDG
+SAP MM Stammdaten
+SAP NWDI
+SAP NetWeaver
+SAP PI
+SAP QIM
+SAP S4/Hana
+SAP UI5
+SAP Visual Composer
+SAP Web Dynpro
+
+SAP XI 3.0
+SAP eCATT
+SAP-Bank Analyzer
+SAP-Lagerverwaltung
+SPSS
+Scrum
+Scrum Master
+Serverless
+Slack
+Smolagents
+Software Developer
+Spring
+Swift
+Terraform
+Traefik
+TypeScript
+Unix
+V-Model
+VS Code
+Visual Studio
+Vue.js
+Waterfall
+Windows server
+Zapier
+mongoDB
+vectorDB

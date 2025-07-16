@@ -1,0 +1,146 @@
+<script type="text/x-template" id="funnelformbuilder-template">
+    <div class="columns is-multiline funnel-builder" style="background-color: #FFFFFF; border: dotted">
+        <div v-for="(step, sIndex) in steps" :key="sIndex" class="column is-one-third">
+            <div class="card is-fullheight">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        🧩 Schritt {{ sIndex + 1 }}: {{ step.title || 'Ohne Titel' }}
+                    </p>
+
+                    <!-- Verschiebe-Buttons -->
+                    <div class="buttons are-small ml-2">
+                        <button class="button is-light" @click="moveStepUp(sIndex)" :disabled="sIndex === 0" title="Nach oben">⬆️</button>
+                        <button class="button is-light" @click="moveStepDown(sIndex)" :disabled="sIndex === steps.length - 1" title="Nach unten">⬇️</button>
+                    </div>
+
+                    <!-- Schritt löschen -->
+                    <a class="card-header-icon" @click="steps.splice(sIndex, 1)" title="Schritt löschen">❌</a>
+                </header>
+
+                <div class="card-content">
+                    <div class="content">
+
+                        <div class="field">
+                            <label class="label">Titel/Frage</label>
+                            <div class="control">
+                                <input class="input" v-model="step.title" placeholder="Titel des Schritts">
+                            </div>
+                        </div>
+
+                        <!-- Felder (Elemente) -->
+                        <div v-for="(el, eIndex) in step.elements" :key="eIndex" class="box mb-3">
+                            <div class="field">
+                                <label class="label">Feldtyp</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select v-model="el.type">
+                                            <option value="text">Textfeld</option>
+                                            <option value="email">E-Mail</option>
+                                            <option value="select">Dropdown</option>
+                                            <option value="textarea">Textarea</option>
+                                            <option value="image-choice">Bildauswahl</option>
+                                            <option value="contact7">Contact7</option>
+                                            <option value="date">Datum (Kalender)</option>
+                                            <option value="video">Video</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Label</label>
+                                <input class="input" v-model="el.label" placeholder="Feldbeschriftung">
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Nächster Schritt</label>
+                                <input class="input" type="number" v-model.number="step.next_step" placeholder="z.B. 1">
+                            </div>
+
+                            <div class="field">
+                                <label class="checkbox">
+                                    <input type="checkbox" v-model="step.is_final">
+                                    Dies ist der letzte Schritt (für Progressbar)
+                                </label>
+                            </div>
+
+                            <div class="field">
+                                <button type="button" class="button is-danger is-small is-light" @click="step.elements.splice(eIndex,1)">
+                                    <span class="icon is-small">🗑️</span><span>− Feld</span>
+                                </button>
+                            </div>
+
+                            <div v-if="el.type === 'contact7'" class="field">
+                                <label class="label">Contact7 Shortcode</label>
+                                <input class="input" v-model="el.shortcode" placeholder="[contact-form-7 id=&quot;123&quot;]">
+                            </div>
+
+                            <div v-if="el.type === 'video'">
+                                <label class="label">Video-URL (z.B. YouTube Embed-Link)</label>
+                                <input class="input" v-model="el.src" placeholder="https://www.youtube.com/embed/xyz123">
+                            </div>
+
+                            <div v-if="['select','image-choice'].includes(el.type)">
+                                <label class="label">Optionen</label>
+
+                                <div v-if="el.type === 'select'">
+                                    <label class="checkbox">
+                                        <input type="checkbox" v-model="el.dynamic"> Dynamisch (Shortcode verwenden)
+                                    </label>
+
+                                    <div v-if="el.dynamic" class="field mt-2">
+                                        <label class="label">Shortcode</label>
+                                        <input class="input" v-model="el.shortcode" placeholder="[dynamic_select spezialisierung]">
+                                    </div>
+                                </div>
+
+                                <div v-if="!el.dynamic || el.type === 'image-choice'">
+                                    <div v-for="(opt, oIndex) in el.options" :key="oIndex" class="columns is-multiline option-group">
+                                        <div class="column is-12">
+                                            <label class="label">Label</label>
+                                            <input class="input" v-model="opt.label" placeholder="Option Label">
+                                        </div>
+
+                                        <div class="column is-12" v-if="el.type === 'image-choice'">
+                                            <label class="label">Bild-URL</label>
+                                            <input class="input" v-model="opt.src" placeholder="Bild-URL">
+                                        </div>
+
+                                        <div class="column is-12" v-if="el.type === 'image-choice'">
+                                            <label class="label">→ Schrittindex</label>
+                                            <input class="input" type="number" v-model.number="opt.next" placeholder="z.B. 2">
+                                        </div>
+
+                                        <div class="column is-12 option-controls">
+                                            <button type="button" class="button is-small is-danger is-light" @click="el.options.splice(oIndex,1)">
+                                                <span class="icon is-small">🗑️</span><span>Löschen</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="button is-small is-link mt-2" @click="addOption(el)">
+                                        <span class="icon is-small">➕</span><span>+ Option</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- + Feld Button -->
+                        <div class="buttons mt-2">
+                            <button type="button" class="button is-primary is-light is-small" @click="addElement(step)">
+                                <span class="icon is-small">➕</span><span>+ Feld</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column is-12 has-text-right">
+            <button type="button" class="button is-success is-light is-small" @click="addStep">
+                <span class="icon is-small">➕</span><span>+ Neuer Schritt</span>
+            </button>
+        </div>
+    </div>
+</script>
