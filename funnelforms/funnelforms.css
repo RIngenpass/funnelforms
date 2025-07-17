@@ -1,0 +1,224 @@
+
+<Hier kommt der CSS-Code von oben rein, wegen technischer Begrenzung folgt er im nächsten Schritt>
+
+.funnel-step { display: none; }
+.funnel-step.active { display: block; }
+.funnel-step.active h2 {
+	text-align: center;
+	margin-bottom: 2rem;
+}
+.funnel-question-title {
+	font-size: 1.8rem;
+	font-weight: 700;
+	color: #000;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+}
+
+.funnel-progressbar {
+	height: 5px;
+	background: #ddd;
+	margin-bottom: 20px;
+}
+.funnel-progressbar .bar {
+	height: 5px;
+	width: 0;
+	background: #FFB200;
+	transition: width 0.3s;
+}
+
+.funnel-info-text {
+	padding: 1em;
+	background: #f4f4f4;
+	border-left: 4px solid #007bff;
+	font-size: 1.1em;
+}
+.funnel-error {
+	border: 2px solid red !important;
+}
+.funnel-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+.funnel-buttons button {
+	padding: 0.75rem 2rem;
+	font-size: 1rem;
+	font-weight: 600;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	background-color: #007BFF;
+	color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.funnel-buttons button:hover {
+	background-color: #0056b3;
+	transform: translateY(-1px);
+}
+.funnel-buttons button:active {
+	transform: scale(0.98);
+}
+
+.funnel-container {
+	margin: 0 auto;
+	padding: 2rem;
+	background: #ffffff;
+	box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+	font-family: 'PT Sans', sans-serif;
+	color: #1a1a1a;
+}
+.funnel-elements {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	padding: 0 1rem;
+}
+.funnel-element label {
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	display: block;
+	font-size: 1.1rem;
+}
+.funnel-element input,
+.funnel-element select,
+.funnel-element textarea {
+	width: 100%;
+	padding: 0.75rem 1rem;
+	font-size: 1rem;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	background: #f9f9f9;
+	transition: border 0.3s ease;
+}
+.funnel-element input:focus,
+.funnel-element select:focus,
+.funnel-element textarea:focus {
+	border-color: #FFB200;
+	outline: none;
+	background: #fff;
+	box-shadow: 0 0 0 3px #FFB20033;
+}
+.funnel-element textarea {
+	min-height: 120px;
+	resize: vertical;
+}
+.funnel-global-nav {
+	padding: 2rem 0;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.funnel-global-nav button,
+.funnel-buttons button,
+.funnel-submit-btn {
+	background-color: #FFB200;
+	color: white;
+	border: none;
+	border-radius: 30px;
+	padding: 0.75rem 2rem;
+	font-weight: 600;
+	font-size: 1rem;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease;
+	cursor: pointer;
+}
+.funnel-global-nav button:hover,
+.funnel-buttons button:hover {
+	background-color: #FFB20033;
+}
+
+.funnel-answer.image-option {
+	text-align: center;
+	cursor: pointer;
+	padding: 0.5rem;
+	border-radius: 10px;
+	transition: all 0.3s ease;
+	border: 2px solid transparent;
+}
+.funnel-answer.image-option:hover {
+	border-color: #FFB200;
+	background-color: #eef7ff;
+}
+.funnel-answer.image-option img {
+	max-width: 320px;
+	height: auto;
+	margin-bottom: 0.5rem;
+	border-radius: 8px;
+}
+
+.funnel-image-options {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	justify-content: center;
+	margin-top: 1rem;
+}
+.funnel-answer-select.hidden {
+	display: none;
+}
+.funnel-textarea {
+	width: 20%;
+	height: 250% !important;
+	padding: 1rem;
+	font-size: 1rem;
+	border-radius: 28px;
+	border: 1px solid #ccc;
+	resize: none;
+}
+.funnel-form-wrapper,
+.funnel-form-inner,
+.funnel-textinput-wrapper {
+	width: 100%;
+	display: block;
+	margin-bottom: auto;
+}
+.funnel-textinput-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	align-items: flex-start;
+}
+.funnel-textinput-wrapper input,
+.funnel-textinput-wrapper textarea {
+	width: 100%;
+	max-width: 600px;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.funnel-container {
+		padding: 1.5rem;
+	}
+	.funnel-element label {
+		font-size: 1rem;
+	}
+	.funnel-buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+	.funnel-image-options {
+		flex-direction: column;
+	}
+	.funnel-question-title {
+		font-size: 1.5rem;
+	}
+	.funnel-prev, .funnel-next {
+		font-size: 0.9rem;
+		padding: 0.6rem 1.5rem;
+	}
+}
